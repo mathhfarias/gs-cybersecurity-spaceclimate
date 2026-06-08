@@ -38,7 +38,7 @@ jobs:
         run: npm test
 
       - name: Gerar relatório Trivy em texto
-        uses: aquasecurity/trivy-action@0.36.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -57,7 +57,7 @@ jobs:
           path: trivy-report.txt
 
       - name: Security Gate demonstrativo - registrar vulnerabilidades altas e críticas
-        uses: aquasecurity/trivy-action@0.36.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -69,7 +69,7 @@ jobs:
 
       - name: Gerar relatório SARIF para aba Security
         if: always()
-        uses: aquasecurity/trivy-action@0.36.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: 'fs'
           scan-ref: '.'
