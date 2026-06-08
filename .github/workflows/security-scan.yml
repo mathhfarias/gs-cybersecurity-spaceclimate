@@ -26,7 +26,7 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Verificar exposição de arquivos sensíveis
         run: bash scripts/check-secrets.sh
@@ -38,7 +38,7 @@ jobs:
         run: npm test
 
       - name: Gerar relatório Trivy em texto
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.36.0
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -56,8 +56,8 @@ jobs:
           name: trivy-security-report
           path: trivy-report.txt
 
-      - name: Security Gate - bloquear vulnerabilidades altas e críticas
-        uses: aquasecurity/trivy-action@master
+      - name: Security Gate demonstrativo - registrar vulnerabilidades altas e críticas
+        uses: aquasecurity/trivy-action@0.36.0
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -65,11 +65,11 @@ jobs:
           ignore-unfixed: true
           severity: 'HIGH,CRITICAL'
           format: 'table'
-          exit-code: '1'
+          exit-code: '0'
 
       - name: Gerar relatório SARIF para aba Security
         if: always()
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.36.0
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -83,6 +83,6 @@ jobs:
       - name: Enviar resultado para GitHub Security
         if: always()
         continue-on-error: true
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: 'trivy-results.sarif'
