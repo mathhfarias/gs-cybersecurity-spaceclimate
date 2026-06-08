@@ -1,0 +1,88 @@
+name: DevSecOps Security Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+jobs:
+  security-validation:
+    name: Security Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Verificar exposição de arquivos sensíveis
+        run: bash scripts/check-secrets.sh
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Executar testes automatizados
+        run: npm test
+
+      - name: Gerar relatório Trivy em texto
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          scanners: 'vuln,secret,misconfig'
+          ignore-unfixed: true
+          severity: 'LOW,MEDIUM,HIGH,CRITICAL'
+          format: 'table'
+          output: 'trivy-report.txt'
+          exit-code: '0'
+
+      - name: Publicar relatório Trivy como artefato
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-security-report
+          path: trivy-report.txt
+
+      - name: Security Gate - bloquear vulnerabilidades altas e críticas
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          scanners: 'vuln,secret,misconfig'
+          ignore-unfixed: true
+          severity: 'HIGH,CRITICAL'
+          format: 'table'
+          exit-code: '1'
+
+      - name: Gerar relatório SARIF para aba Security
+        if: always()
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          scanners: 'vuln,secret,misconfig'
+          ignore-unfixed: true
+          severity: 'HIGH,CRITICAL'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          exit-code: '0'
+
+      - name: Enviar resultado para GitHub Security
+        if: always()
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'

@@ -1,0 +1,9 @@
+Cole aqui o log do Trivy após executar o pipeline no GitHub Actions.
+
+Sugestão:
+1. Abra a aba Actions.
+2. Clique em DevSecOps Security Pipeline.
+3. Abra a execução desejada.
+4. Clique na etapa do Trivy.
+5. Copie o trecho principal do log.
+6. Cole neste arquivo.

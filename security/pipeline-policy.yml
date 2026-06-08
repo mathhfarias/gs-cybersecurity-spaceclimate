@@ -1,0 +1,33 @@
+# Política simplificada de segurança do pipeline
+# Este arquivo documenta os critérios usados pelo módulo DevSecOps.
+
+pipeline:
+  minimum_permissions:
+    contents: read
+    security-events: write
+    actions: read
+
+secrets:
+  blocked_files:
+    - .env
+    - .env.local
+    - .env.production
+    - .env.development
+  recommended_storage:
+    - GitHub Secrets
+    - variáveis de ambiente
+    - serviço de gestão de segredos
+
+security_gate:
+  tool: Trivy
+  scan_type: fs
+  block_on_severity:
+    - HIGH
+    - CRITICAL
+
+evidence:
+  required:
+    - print do pipeline com sucesso
+    - print do pipeline com falha simulada
+    - log do Trivy
+    - README explicativo
