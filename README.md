@@ -10,6 +10,17 @@ O foco principal do repositório é demonstrar a integração de um **módulo De
 
 ---
 
+## Integrantes
+
+| Nome                              | RM       |
+| --------------------------------- | -------- |
+| MATHEUS FARIAS DE LIMA            | RM554254 |
+| MIGUEL MAURICIO PARRADO PATARROYO | RM554007 |
+| VITOR PINHEIRO NASCIMENTO         | RM553693 |
+| GABRIEL LEÃO                      | RM552642 |
+| PEDRO HENRIQUE NARDACI CHAVES     | RM553988 |
+
+
 ## Contexto do Projeto
 
 O SpaceClimate representa uma API que poderia consumir dados orbitais, telemetria de satélites e informações climáticas para apoiar análises de risco e emissão de alertas.
